@@ -113,8 +113,8 @@ class ArtistMethods {
     var artistData =
         Artist.fromJson((await request.send(mode: RequestMode.GET))['artist']);
 
-    var response =
-        await http.get(Uri.https('jsonplaceholder.typicode.com', 'albums/1'));
+    var response = await http.get(Uri.https(
+        'www.last.fm', 'music/${artist.replaceAll(' ', '+')}/+images'));
     var result =
         RegExp(r'image-list-item-wrapper[\s\S]*?src="(.*?)"[\s\S]*?<\/li')
             .firstMatch(response?.body ?? '')
