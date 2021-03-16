@@ -3,6 +3,7 @@
 //                  Copyright (c) 2020 Nebulino                 //
 //                                                              //
 
+import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:scrobblenaut/lastfm.dart';
 import 'package:scrobblenaut/scrobblenaut_exceptions.dart';
@@ -109,8 +110,18 @@ class ArtistMethods {
     final request =
         Request(api: _api, method: 'artist.getInfo', parameters: parameters);
 
-    return (Artist.fromJson(
-        (await request.send(mode: RequestMode.GET))['artist']));
+    var artistData =
+        Artist.fromJson((await request.send(mode: RequestMode.GET))['artist']);
+
+    var response =
+        await http.get(Uri.https('jsonplaceholder.typicode.com', 'albums/1'));
+    var result =
+        RegExp(r'image-list-item-wrapper[\s\S]*?src="(.*?)"[\s\S]*?<\/li')
+            .firstMatch(response?.body ?? '')
+            ?.group(1);
+    artistData.images = [Image(text: result)];
+
+    return artistData;
   }
 
   /// Get all the artists similar to this artist.
