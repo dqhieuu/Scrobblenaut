@@ -3,9 +3,6 @@
 //                  Copyright (c) 2020 Nebulino                 //
 //                                                              //
 
-import 'dart:io';
-
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:scrobblenaut/scrobblenaut_exceptions.dart';
@@ -19,7 +16,7 @@ import 'package:scrobblenaut/src/helpers/utils.dart';
 class SpaceShip {
   Dio _dio;
 
-  SpaceShip({@required String base_url, String proxy}) {
+  SpaceShip({@required String base_url}) {
     _dio = Dio(
       BaseOptions(
           baseUrl: '${base_url}',
@@ -67,15 +64,6 @@ class SpaceShip {
           return error;
         }
       }));
-
-    if (proxy != null) {
-      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (client) {
-        client.findProxy = (uri) => 'PROXY ${proxy}';
-        client.badCertificateCallback =
-            (X509Certificate cert, String host, int port) => true;
-      };
-    }
   }
 
   Future<dynamic> get({
